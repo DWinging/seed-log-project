@@ -24,9 +24,10 @@ CREATE TABLE IF NOT EXISTS `Tag` (
 );
 
 CREATE TABLE IF NOT EXISTS `Post_Tag` (
+    `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
 	`post_id` BIGINT NOT NULL,
     `tag_id` BIGINT NOT NULL,
-    PRIMARY KEY (`post_id`, `tag_id`),
+    UNIQUE KEY `unique_post_tag` (`post_id`, `tag_id`),
     FOREIGN KEY (`post_id`) REFERENCES `Post`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`tag_id`) REFERENCES `Tag`(`id`) ON DELETE CASCADE
 );
