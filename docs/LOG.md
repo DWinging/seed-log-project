@@ -92,3 +92,29 @@
 - **Persistence 패키지 이슈**: Spring Boot 3.0 이상 버전에서 `javax.persistence`가 `jakarta.persistence`로 변경됨에 따른 임포트 오류 해결.
   
 ---
+오늘 겪으신 다이내믹한 과정들을 기록으로 남기면 나중에 정말 큰 자산이 될 거예요. 2026-03-13 버전으로 깔끔하게 정리해 드립니다!
+
+---
+
+## 📅 2026-03-13
+### 📈 진행 상황
+- **백엔드 핵심 아키텍처 가동**: `Controller-Service-Repository`로 이어지는 비즈니스 로직의 흐름을 완성하고 실제 구동 확인.
+- **데이터 영속성 검증**: 실제 MySQL 데이터베이스와의 연동을 통해 데이터 저장 및 스키마 자동 생성 프로세스 검증 완료.
+
+### ✅ 진행 작업
+- **API 레이어 구현**:
+- `PostController`: RESTful한 게시글 생성(`POST`), 수정(`PUT`), 삭제(`DELETE`) 엔드포인트 구축.
+- `PostService`: `@Transactional`을 활용한 비즈니스 로직 및 JPA의 변경 감지(Dirty Checking) 메커니즘 적용.
+
+* **DB 인프라 구축**:
+- MySQL 데이터베이스 스키마 생성 및 연동 테스트.
+- `application.properties` 설정을 통한 JPA 데이터 소스 및 Hibernate DDL 옵션(`create`/`update`) 최적화.
+
+### 🛠 트러블 슈팅
+- **MySQL 'Unknown database' 에러**: 물리적인 데이터베이스(Schema) 부재로 인한 기동 실패 발생. CMD 환경에서 `CREATE DATABASE` 명령을 통해 해결.
+- **Lombok `@RequiredArgsConstructor` 인식 오류**: IDE 환경 문제로 인한 `final` 필드 미초기화 에러 발생. 수동 생성자 주입 방식으로 우회하여 서비스 로직의 안정성 확보.
+- **JPA 양방향 매핑 오타 (`catetory`)**: `Post`와 `Category` 엔티티 간 `mappedBy` 설정 시 발생한 필드명 오타를 발견하여 수정. 런타임 시의 `AnnotationException` 해결.
+- **Hibernate 스키마 검증 실패**: 기존 DB 구조와 자바 엔티티 간의 불일치로 인한 `SchemaManagementException` 발생. `ddl-auto=create` 옵션을 통해 테이블 구조를 동기화하여 해결.
+- **HTTP 405 Method Not Allowed**: 브라우저 주소창(GET)을 통한 POST API 접근 시 발생한 핸들러 미매핑 이슈 확인. API 요청 메서드와 컨트롤러 매핑의 일치 필요성 확인.
+
+---

@@ -37,7 +37,7 @@ public class Post {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "category_id")
-	private Category catetory;
+	private Category category;
 	
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<PostTag> postTags = new ArrayList<>();
