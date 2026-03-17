@@ -21,10 +21,6 @@ public class PostController {
 	
 	private final PostService postService;
 	
-	public PostController(PostService postService) {
-		this.postService = postService;
-	}
-	
 	@GetMapping
 	public String test() {
 	    return "서버 연결 성공! 이제 포스트맨으로 POST 요청을 보내보세요.";
