@@ -145,7 +145,7 @@
 - **DB 설계의 정석**: 데이터 무결성(Integrity) 및 정규화(Normalization) 이론 학습.
 - **Velog 기술 포스팅**: [[DB] 데이터 무결성과 정규화(1NF~BCNF) 정리.](https://velog.io/@dong20/DB-데이터-무결성과-정규화Normalization)
 
-### ✅ 오늘 완료한 작업
+### ✅ 진행 작업
 - **데이터 무결성 3대장 정립**:
     - **개체 무결성**: PK는 중복 불가, NULL 불가 (데이터 고유성).
     - **참조 무결성**: FK는 참조 대상이 존재해야 함 (연관 데이터 일관성).
@@ -156,5 +156,30 @@
     - **2NF**: 복합키 사용 시 부분 함수 종속 제거.
     - **3NF**: 일반 컬럼 간의 이행 함수 종속 제거.
     - **BCNF**: 모든 결정자가 후보키(Candidate Key)가 되도록 엄격하게 분해.
+
+---
+
+## 📅 2026-03-19
+### 📈 진행 상황
+- **글로벌 예외 처리(Global Exception Handling) 아키텍처 구축**: 시스템 전반의 에러 응답 규격화 및 안정성 확보.
+- **프로젝트 패키지 구조 최적화**: `global.error` 패키지 분리를 통한 관심사 분리(SoC) 적용.
+
+### ✅ 진행 작업
+- **Error Architecture 설계**:
+    - **ErrorCode (Enum)**: 비즈니스 에러 코드 및 메시지 중앙 관리 체계 구축.
+    - **ErrorResponse (DTO)**: `timestamp`, `status`, `code`, `message`를 포함한 표준 응답 규격 정의.
+    - **GlobalExceptionHandler**: `@RestControllerAdvice`를 활용하여 프로젝트 전체 예외를 한곳에서 처리하도록 구현.
+- **Custom Exception 계층화**:
+    - 최상위 비즈니스 예외인 `BusinessException` 정의.
+    - 입력값 검증 전용 `InvalidValueException` 등 세부 예외 클래스 확장.
+    - 다양한 상황에 대응하기 위해 부모 클래스(`BusinessException`) 생성자 오버로딩 적용.
+
+### 🛠 트러블 슈팅
+- **LocalDateTime 생성 방식 오류**: 
+    - `new LocalDateTime()` 시도 시 컴파일 에러 발생 -> 정적 팩토리 메서드인 `LocalDateTime.now()`로 수정하여 해결.
+- **serialVersionUID 누락 경고**: 
+    - `Exception` 상속 시 직렬화 버전 관리 필드 미선언 확인 -> `private static final long serialVersionUID = 1L;` 명시적 선언으로 정합성 확보.
+- **부모 생성자 호출(super) 불일치**: 
+    - 자식 클래스에서 커스텀 메시지를 넘길 때 부모 클래스에 해당 생성자가 없어 에러 발생 -> `BusinessException(String, ErrorCode)` 생성자 추가 정의.
 
 ---
