@@ -209,6 +209,7 @@
     - 입력 시에는 관리 효율을 위해 `categoryId(Long)`를 받고, 출력 시에는 사용자 가독성을 위해 `categoryName(String)`으로 변환하여 제공하는 전략 채택.
 
 ### 📂 파일 구조 변경 (Post Domain)
+```text
 post
 ├── 📁 controller
 │   └── 📄 PostController.java
@@ -233,5 +234,5 @@ post
 │   └── 📄 TagRepository.java
 └── 📁 service
     └── 📄 PostService.java
-    
+```
 ---
