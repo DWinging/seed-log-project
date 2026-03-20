@@ -1,8 +1,9 @@
-package com.dwinging.blog.repository;
+package com.dwinging.blog.post.repository;
 
-import com.dwinging.blog.entity.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import com.dwinging.blog.post.entity.Post;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {

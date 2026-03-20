@@ -1,4 +1,4 @@
-package com.dwinging.blog.controller;
+package com.dwinging.blog.post.controller;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dwinging.blog.entity.Post;
-import com.dwinging.blog.service.PostService;
+import com.dwinging.blog.post.entity.Post;
+import com.dwinging.blog.post.service.PostService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,8 +27,8 @@ public class PostController {
 	}
 	
 	@PostMapping
-	public Post createPost(@RequestBody Post post) {
-		return postService.savePost(post);
+	public Long createPost(@RequestBody Post post) {
+		return postService.createPost(post);
 	}
 	
 	@PutMapping("/{id}")

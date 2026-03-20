@@ -183,3 +183,55 @@
     - 자식 클래스에서 커스텀 메시지를 넘길 때 부모 클래스에 해당 생성자가 없어 에러 발생 -> `BusinessException(String, ErrorCode)` 생성자 추가 정의.
 
 ---
+
+### 📅 2026-03-20
+### 📈 진행 상황
+- **게시글(Post) 도메인 DTO 아키텍처 설계 완료**: 계층 간 데이터 전송 규격 확립 및 보안성 강화.
+- **응답 데이터 최적화(Payload Optimization)**: 목록 조회와 상세 조회의 응답 객체 분리를 통한 성능 효율성 확보.
+- **DTO 패키지 구조 고도화**: `request`와 `response` 전용 패키지 분리로 유지보수성 향상.
+
+### ✅ 진행 작업
+- **DTO Layering & Packaging**:
+    - `dto.request`: `CreateRequestDTO`, `UpdateRequestDTO`, `SelectPostRequest` (입력값 검증 및 요청 데이터 캡슐화).
+    - `dto.response`: `PostListResponseDTO`, `PostDetailResponseDTO`, `SelectTagResponseDTO` (출력 데이터 선별 및 가공).
+- **Context-Specific DTO 설계**:
+    - **목록용(List)**: 본문(`content`)을 제외하고 `id`, `title`, `categoryName`, `createAt`만 포함하여 네트워크 부하 감소.
+    - **상세용(Detail)**: 본문 및 태그 리스트를 포함한 전체 데이터 제공.
+- **RESTful 식별 전략 수립**:
+    - 수정/삭제 시 대상 ID를 DTO가 아닌 URL Path Variable(`{id}`)로 수신하도록 설계하여 표준 준수.
+
+### 🛠 트러블 슈팅
+- **Entity 직접 노출의 위험성 인지**: 
+    - 엔티티를 API 응답으로 보낼 경우 내부 DB 구조가 노출되고 순환 참조 발생 가능성 확인 -> 어노테이션이 없는 순수 POJO인 DTO로 변환하여 반환하도록 구조 개선.
+- **정렬 기준 필드 선정 고민**: 
+    - DB ID(`Long`)와 생성일(`LocalDate`) 중 정렬 기준 고민 -> 사용자에게 직관적인 정보를 제공하기 위해 `createAt` 필드를 DTO에 포함하여 응답 규격 확정.
+- **카테고리 매핑 전략**: 
+    - 입력 시에는 관리 효율을 위해 `categoryId(Long)`를 받고, 출력 시에는 사용자 가독성을 위해 `categoryName(String)`으로 변환하여 제공하는 전략 채택.
+
+### 📂 파일 구조 변경 (Post Domain)
+post
+├── 📁 controller
+│   └── 📄 PostController.java
+├── 📁 dto
+│   ├── 📁 request
+│   │   ├── 📄 CreateRequestDTO.java
+│   │   ├── 📄 SelectPostRequest.java
+│   │   └── 📄 UpdateRequestDTO.java
+│   └── 📁 response
+│       ├── 📄 PostDetailResponseDTO.java
+│       ├── 📄 PostListResponseDTO.java
+│       └── 📄 SelectTagResponseDTO.java
+├── 📁 entity
+│   ├── 📄 Category.java
+│   ├── 📄 Post.java
+│   ├── 📄 PostTag.java
+│   └── 📄 Tag.java
+├── 📁 repository
+│   ├── 📄 CategoryRepository.java
+│   ├── 📄 PostRepository.java
+│   ├── 📄 PostTagRepository.java
+│   └── 📄 TagRepository.java
+└── 📁 service
+    └── 📄 PostService.java
+    
+---

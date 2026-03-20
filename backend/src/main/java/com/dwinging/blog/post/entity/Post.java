@@ -1,4 +1,4 @@
-package com.dwinging.blog.entity;
+package com.dwinging.blog.post.entity;
 
 import lombok.Getter;
 import lombok.Setter;
