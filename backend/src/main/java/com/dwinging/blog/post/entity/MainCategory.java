@@ -8,14 +8,14 @@ import java.util.List;
 import jakarta.persistence.*;
 
 /**
- * 게시글의 분류를 나타내는 카테고리 엔티티.
+ * 게시글의 분류를 나타내는 메인 카테고리 엔티티.
  * <p>게시글(Post)과 1:N 관계를 가지며, 카테고리명은 고유(Unique)해야 한다.</p>
  */
 @Entity
-@Table(name = "Category")
+@Table(name = "main_category")
 @Getter @Setter
 @NoArgsConstructor // JPA 엔티티 영속화를 위한 기본 생성자
-public class Category {
+public class MainCategory {
 	
 	/** 카테고리 고유 식별자 (PK) */
 	@Id
@@ -32,7 +32,7 @@ public class Category {
 	 * Post 엔티티의 'category' 필드에 의해 관리되는 매핑임을 명시(mappedBy).
 	 * 초기화를 통해 NPE(NullPointerException)를 방지함.
 	 */
-	@OneToMany(mappedBy = "category")
+	@OneToMany(mappedBy = "mainCategory")
 	private List<Post> posts = new ArrayList<>();
 	
 }

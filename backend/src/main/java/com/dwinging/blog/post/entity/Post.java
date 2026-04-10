@@ -11,13 +11,15 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.dwinging.blog.user.entity.UserInfo;
+
 /**
  * 블로그의 게시글 정보를 관리하는 핵심 엔티티.
  * <p>게시글의 본문, 생성/수정 시간 및 카테고리, 태그와의 연관 관계를 정의한다. 
  * JPA Auditing을 통해 시간 데이터를 자동으로 관리한다.</p>
  */
 @Entity
-@Table(name = "Post")
+@Table(name = "post")
 @Getter @Setter
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class) // 생성/수정 시간 자동 기록을 위한 리스너
@@ -35,8 +37,11 @@ public class Post {
 	/** * 게시글 본문 내용.
 	 * <p>대용량 텍스트 저장을 위해 데이터베이스의 TEXT 타입을 사용한다.</p>
 	 */
-	@Column(columnDefinition = "TEXT")
+	@Column(columnDefinition = "LONGTEXT")
 	private String content;
+	
+	@Column(name = "is_deleted", nullable = false)
+	private boolean isDeleted = false;
 	
 	/** * 게시글 최초 생성 일시.
 	 * <p>Spring Data JPA의 @CreatedDate를 통해 자동으로 기록되며, 수정 시 변경되지 않는다.</p>
@@ -51,12 +56,20 @@ public class Post {
 	@LastModifiedDate
 	private LocalDateTime updatedAt;
 	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id")
+	private UserInfo user;
+	
 	/** * 소속 카테고리 (N:1 양방향 매핑).
 	 * <p>연관 관계의 주인이며, 성능 최적화를 위해 지연 로딩(LAZY) 방식을 사용한다.</p>
-	 */
+	 */	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "category_id")
-	private Category category;
+	@JoinColumn(name = "main_category_id")
+	private MainCategory mainCategory;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "sub_category_id")
+	private SubCategory subCategory;
 	
 	/** * 게시글에 포함된 태그 리스트 (중간 테이블 PostTag 활용).
 	 * <p>게시글 삭제 시 연관된 태그 연결 정보도 함께 제거(CascadeType.ALL, orphanRemoval)되도록 설정한다.</p>

@@ -327,3 +327,84 @@ post
 - [(velog) [ERD] Seed-Log ERD 2차 설계](https://velog.io/@dong20/ERD-Seed-Log-ERD-2차-설계)
   
 -----
+
+## 📅 2026-04-10
+
+### 📈 진행 상황
+
+  - **SQL 코드 수정**: user 관련 table 코드 추가, category 관련 table 코드 수정
+  - **Post 패키지 내 Entity, Repository 수정**: 변경된 쿼리문 반영
+  - **User 패키지 추가** : User 관련 쿼리문 반영
+
+### ✅ 진행 작업 및 학습 내용
+
+  - **SQL 쿼리문 변경**:
+      - user_info, user_image, main_category, sub_category table CREATE 구문 추가
+      - category CREATE 구문 삭제
+      - post Table column 수정 
+        - user_id, main_category_id, sub_category_id, is_deleted column 추가
+        - category column 삭제
+  - **SQL 변경 내용 Entity, Repository 반영**
+      - PostEntity 코드 수정
+      - CateogoryEntity, CategoryRepository -> MainCategoryEntity, MainCategoryRepository 로 변경
+      - SubCategoryEntity, SubCategoryRepository 추가
+  - **user package 추가**
+      - entity, reposititory package 추가
+  - **user.entity**
+      - UserInfo, UserImage class 추가
+  - **user.repository**
+      - UserInfoRepository, UserImageRepository interface 추가
+
+### 🛠 트러블 슈팅
+  - **git pull fail**
+      - **문제**: local과 github 코드가 불일치. git pull 동작시 Already up to date. 문구 출력
+      - **조치**
+        - **log 확인**: git log -n 1 --oneline, git log -n 1 origin/main --oneline 최신 커밋 기록 확인 결과 일치하는 것을 확인함
+        - **git 강제 복구**: git reset --hard origin/main를 통해 local과 서버의 상태를 통일을 시도했지만, 여전히 같은 현상 발생
+      - **해결**: local 파일 삭제 후 git clone으로 해결
+  
+  - **SQL calumn 표기 방식 통일**
+      - **문제**: column 명칭 대소문자 혼용
+      - **해결**: 데이터베이스 컬럼 명칭 소문자/언더바(_) 표기법으로 통일
+
+
+### 📂 파일 구조 변경 (Post Domain, User Domain)
+```text
+post
+├── 📁 controller
+│   └── 📄 PostController.java
+├── 📁 dto
+│   ├── 📁 request
+│   │   ├── 📄 CreateRequestDTO.java
+│   │   ├── 📄 SelectPostRequest.java
+│   │   └── 📄 UpdateRequestDTO.java
+│   └── 📁 response
+│       ├── 📄 PostDetailResponseDTO.java
+│       ├── 📄 PostListResponseDTO.java
+│       └── 📄 SelectTagResponseDTO.java
+├── 📁 entity
+│   ├── 📄 MainCategory.java
+│   ├── 📄 SubCategory.java
+│   ├── 📄 Post.java
+│   ├── 📄 PostTag.java
+│   └── 📄 Tag.java
+├── 📁 repository
+│   ├── 📄 MainCategoryRepository.java
+│   ├── 📄 SubCategoryRepository.java
+│   ├── 📄 PostRepository.java
+│   ├── 📄 PostTagRepository.java
+│   └── 📄 TagRepository.java
+└── 📁 service
+    └── 📄 PostService.java
+```
+
+```text
+user
+├── 📁 entity
+│   ├── 📄 UserImage.java
+│   └── 📄 UserInfo.java
+└── 📁 repository
+    ├── 📄 UserImageRepository.java
+    └── 📄 UserInfoRepository.java
+```
+-----

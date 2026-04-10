@@ -7,11 +7,11 @@ import com.dwinging.blog.global.error.ErrorCode;
 import com.dwinging.blog.global.error.exception.BusinessException;
 import com.dwinging.blog.post.dto.request.CreateRequestDTO;
 import com.dwinging.blog.post.dto.request.UpdateRequestDTO;
-import com.dwinging.blog.post.entity.Category;
+import com.dwinging.blog.post.entity.MainCategory;
 import com.dwinging.blog.post.entity.Post;
 import com.dwinging.blog.post.entity.PostTag;
 import com.dwinging.blog.post.entity.Tag;
-import com.dwinging.blog.post.repository.CategoryRepository;
+import com.dwinging.blog.post.repository.MainCategoryRepository;
 import com.dwinging.blog.post.repository.PostRepository;
 import com.dwinging.blog.post.repository.TagRepository;
 
@@ -27,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 public class PostService {
 	
 	private final PostRepository postRepository;
-	private final CategoryRepository categoryRepository;
+	private final MainCategoryRepository categoryRepository;
 	private final TagRepository tagRepository;
 	
 	/**
@@ -41,14 +41,14 @@ public class PostService {
 	public Long createPost(CreateRequestDTO dto) {
 		
 		// 1. 카테고리 검증 및 조회
-		Category category = categoryRepository.findById(dto.getCategoryId())
+		MainCategory category = categoryRepository.findById(dto.getCategoryId())
 				.orElseThrow(() -> new BusinessException(ErrorCode.CATEGORY_NOT_FOUND));
 		
 		// 2. 게시글 엔티티 생성 및 기본 정보 설정
 		Post post = new Post();
 		post.setTitle(dto.getTitle());
 		post.setContent(dto.getContent());
-		post.setCategory(category);
+		post.setMainCategory(category);
 		
 		// 3. 태그 처리: 존재하면 가져오고 없으면 생성하여 중간 테이블(PostTag)로 연결
 		if(dto.getTags() != null) {
@@ -78,13 +78,13 @@ public class PostService {
 				.orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
 
 		// 2. 변경할 카테고리 검증
-		Category category = categoryRepository.findById(dto.getCategoryId())
+		MainCategory category = categoryRepository.findById(dto.getCategoryId())
 				.orElseThrow(() -> new BusinessException(ErrorCode.CATEGORY_NOT_FOUND));
 
 		// 3. 데이터 업데이트
 		post.setTitle(dto.getTitle());
 		post.setContent(dto.getContent());
-		post.setCategory(category);
+		post.setMainCategory(category);
 	
 		// 4. 태그 리스트 갱신: 기존 관계 초기화 후 다시 매핑
 		if(dto.getTags() != null) {
