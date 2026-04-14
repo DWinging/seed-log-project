@@ -1,4 +1,4 @@
-package com.dwinging.blog.post.repository;
+package com.dwinging.blog.post.repository.Post;
 
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

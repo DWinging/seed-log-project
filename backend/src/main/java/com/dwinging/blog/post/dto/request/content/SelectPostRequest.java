@@ -1,4 +1,4 @@
-package com.dwinging.blog.post.dto.request;
+package com.dwinging.blog.post.dto.request.content;
 
 import lombok.Getter;
 import lombok.Setter;

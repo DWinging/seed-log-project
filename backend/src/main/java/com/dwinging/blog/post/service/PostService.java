@@ -5,15 +5,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dwinging.blog.global.error.ErrorCode;
 import com.dwinging.blog.global.error.exception.BusinessException;
-import com.dwinging.blog.post.dto.request.CreateRequestDTO;
-import com.dwinging.blog.post.dto.request.UpdateRequestDTO;
+import com.dwinging.blog.post.dto.request.content.CreateRequestDTO;
+import com.dwinging.blog.post.dto.request.content.UpdateRequestDTO;
 import com.dwinging.blog.post.entity.MainCategory;
 import com.dwinging.blog.post.entity.Post;
 import com.dwinging.blog.post.entity.PostTag;
 import com.dwinging.blog.post.entity.Tag;
-import com.dwinging.blog.post.repository.MainCategoryRepository;
-import com.dwinging.blog.post.repository.PostRepository;
-import com.dwinging.blog.post.repository.TagRepository;
+import com.dwinging.blog.post.repository.Post.MainCategoryRepository;
+import com.dwinging.blog.post.repository.Post.PostRepository;
+import com.dwinging.blog.post.repository.Post.TagRepository;
 
 import lombok.RequiredArgsConstructor;
 

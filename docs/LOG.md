@@ -408,3 +408,37 @@ user
     └── 📄 UserInfoRepository.java
 ```
 -----
+
+## 📅 2026-04-14
+
+### 📈 진행 상황
+  - **Search 코드 작성**: 검색 관련 controller, service, repository, dto 작성 완료
+  - **search, post 패키지 분리**: Post 내 검색 기능 구현에 따라 패키지 분리
+
+### ✅ 진행 작업 및 학습 내용
+  - **Search 코드 작성**
+    - controller: PostSearchController.java 코드 작성
+        - 클라이언트의 검색 요청에 따라 해당하는 게시글 반환
+    - service: PostSearchService.java 코드 작성
+        - 검색 type에 맞게 repository 호출
+        - 전체 검색, 메인 카테고리, 서브 카테고리, 제목에 포함된 키워드, 사용자 아이디 기준 검색
+    - repository : PostSearchRepository.java 코드 작성
+        - findAll(Pageable pageable) : 조건 없이 전체 검색
+        - findByMainCategory(@Param("mainId") Long mainId, Pageable pageable) : 메인 카테고리에 속한 게시글 검색
+        - findBySubCategory(@Param("mainId") Long mainId, @Param("subId") Long subId, Pageable pageable) : 메인 -> 서브 카테고리에 속하는 게시글 검색
+        - findByTitleKeyword(@Param("keyword") String keyword, Pageable pageable) : 타이틀에 포함된 키워드 기반 검색
+        - findByUserId(@Param("userId") String userId, Pageable pageable) : 특정 유저가 작성한 게시글 검색
+    - dto - request : PostSearchCondition.java 코드 작성
+    - dto - responce : PostListDTO.java 코드 작성
+
+### 🛠 트러블 슈팅
+  - **Error : The local variable postPage may not have been initialized**
+    - 원인 : postPage 변수가 초기화 되지 않음 
+    - 해결 : null 값을 기본값으로 초기화
+  - **Error : The method findByMainCategory(Long, DataWebProperties.Pageable) in the type PostSearchRepository is not applicable for the arguments (Long, Pageable)**
+    - 원인 : Pageable 매개변수 타입 불일치
+    - 해결 : Pageable import 경로 통일
+        - 수정 전 : import org.springframework.boot.data.autoconfigure.web.DataWebProperties.Pageable;
+        - 수정 후 : import org.springframework.data.domain.Pageable;
+
+---

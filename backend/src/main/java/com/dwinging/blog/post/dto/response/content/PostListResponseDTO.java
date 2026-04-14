@@ -1,4 +1,4 @@
-package com.dwinging.blog.post.dto.response;
+package com.dwinging.blog.post.dto.response.content;
 
 import java.time.LocalDateTime;
 
