@@ -17,6 +17,7 @@ import jakarta.persistence.*;
 @Getter @Setter
 @NoArgsConstructor // JPA 엔티티 영속화를 위한 기본 생성자
 public class SubCategory {
+	
 	/** 카테고리 고유 식별자 (PK) */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

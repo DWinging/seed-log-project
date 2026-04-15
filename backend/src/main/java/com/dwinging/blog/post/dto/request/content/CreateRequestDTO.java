@@ -21,8 +21,14 @@ public class CreateRequestDTO {
 	/** 게시글 본문 내용 (TEXT 타입 매핑) */
 	private String content;
 	
-	/** 연결할 카테고리의 고유 식별자 */
-	private Long categoryId;
+	/** 게시글 작성자 */
+	private String userId;
+	
+	/** 연결할 메인 카테고리의 고유 식별자 */
+	private Long mainCategoryId;
+	
+	/** 연결할 서브 카테고리의 고유 식별자 */
+	private Long subCategoryId;
 	
 	/** 게시글에 부여할 태그 이름 리스트 */
 	private List<String> tags;
@@ -30,15 +36,25 @@ public class CreateRequestDTO {
 	/** 
 	 * 모든 필드를 포함하는 생성자
 	 * 테스트 코드 작성이나 내부 객체 생성시 사용된다.
-	 * @param title			게시글 제목
-	 * @param content		게시글 내용
-	 * @param categoryId	연관 카테고리 ID
-	 * @param tags			태그 문자열 리스트
+	 * @param title				게시글 제목
+	 * @param content			게시글 내용
+	 * @param userId			작성자 ID 고유 번호
+	 * @param mainCategoryId	연관 메인 카테고리 ID
+	 * @param subCateogyrId		연관 서브 카테고리 ID
+	 * @param tags				태그 문자열 리스트
 	 */
-	public CreateRequestDTO(String title, String content, Long categoryId, List<String> tags) {
+	public CreateRequestDTO(
+			String title, 
+			String content,
+			String userId,
+			Long mainCategoryId,
+			Long subCategoryId,
+			List<String> tags) {
 		this.title = title;
 		this.content = content;
-		this.categoryId = categoryId;
+		this.userId = userId;
+		this.mainCategoryId = mainCategoryId;
+		this.subCategoryId = subCategoryId;
 		this.tags = tags;
 	}
 }

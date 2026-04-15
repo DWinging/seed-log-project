@@ -1,5 +1,7 @@
 package com.dwinging.blog.post.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,7 +33,7 @@ public class PostController {
 	 * 서버 연결 상태를 확인하기 위한 테스트 엔드 포인트
 	 * @return 연결 성공 메시지
 	 */
-	@GetMapping
+	@GetMapping("/test")
 	public String test() {
 	    return "서버 연결 성공! 이제 포스트맨으로 POST 요청을 보내보세요.";
 	}
@@ -42,9 +44,10 @@ public class PostController {
 	 * @return 생성된 게시글의 고유 식별자
 	 */
 	@PostMapping
-	public Long createPost(@RequestBody CreateRequestDTO dto) {
+	public ResponseEntity<Long> createPost(@RequestBody CreateRequestDTO dto) {
 		// 엔티티 대신 DTO를 직접 전달하여 캡슐화 유지
-		return postService.createPost(dto);
+		Long postId = postService.createPost(dto);
+		return ResponseEntity.status(HttpStatus.CREATED).body(postId);
 	}
 	
 	/**
@@ -54,10 +57,11 @@ public class PostController {
 	 * @return 수정 완료된 게시글의 ID
 	 */
 	@PutMapping("/{id}")
-	public Long updatePost(@PathVariable Long id, @RequestBody UpdateRequestDTO dto) {
+	public ResponseEntity<Long> updatePost(
+			@PathVariable Long id, 
+			@RequestBody UpdateRequestDTO dto) {
 		// DTO에 ID를 세팅
-		dto.setId(id);
-		return postService.updatePost(dto);
+		return ResponseEntity.ok(postService.updatePost(id, dto));
 	}
 	
 	/**
@@ -65,7 +69,8 @@ public class PostController {
 	 * @param id 삭제할 게시글의 ID
 	 */
 	@DeleteMapping("/{id}")
-	public void deletePost(@PathVariable Long id) {
+	public ResponseEntity<Void> deletePost(@PathVariable Long id) {
 		postService.deletePost(id);
+		return ResponseEntity.noContent().build();
 	}
 }

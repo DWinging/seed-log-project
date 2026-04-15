@@ -23,23 +23,33 @@ public class UpdateRequestDTO {
 	/** 변경할 게시글 본문 내용 */
 	private String content;
 	
-	/** 새롭게 지정할 카테고리의 고유 식별자 (FK) */
-	private Long categoryId;
+	/** 새롭게 지정할 메인 카테고리의 고유 식별자 (FK) */
+	private Long mainCategoryId;
+	
+	/** 새롭게 지정할 서브 카테고리의 고유 식별자 (FK) */
+	private Long subCategoryId;
 	
 	/** 수정 후 적용할 태그 일므 리스트 (기존 태그를 대체함) */
 	private List<String> tags;
 	
 	/**
 	 * 수정을 위한 초기 데이터 설정 생성자
-	 * @param title 	  수정할 제목
-	 * @param content	  수정할 내용
-	 * @param categoryId  변경할 카테고리의 이름
-	 * @param tags		  변경할 태그 리스트
+	 * @param title 	  		수정할 제목
+	 * @param content	  		수정할 내용
+	 * @param mainCategoryId	변경할 메인 카테고리의 고유 번호
+	 * @param subCategoryId 	변경할 서브 카테고리의 고유 번호
+	 * @param tags		  		변경할 태그 리스트
 	 */
-	public UpdateRequestDTO(String title, String content, Long categoryId, List<String> tags) {
+	public UpdateRequestDTO(
+			String title, 
+			String content, 
+			Long mainCategoryId, 
+			Long subCategoryId, 
+			List<String> tags) {
 		this.title = title;
 		this.content = content;
-		this.categoryId = categoryId;
+		this.mainCategoryId = mainCategoryId;
+		this.subCategoryId = subCategoryId;
 		this.tags = tags;
 	}
 	

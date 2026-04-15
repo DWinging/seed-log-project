@@ -8,12 +8,15 @@ import com.dwinging.blog.global.error.exception.BusinessException;
 import com.dwinging.blog.post.dto.request.content.CreateRequestDTO;
 import com.dwinging.blog.post.dto.request.content.UpdateRequestDTO;
 import com.dwinging.blog.post.entity.MainCategory;
+import com.dwinging.blog.post.entity.SubCategory;
 import com.dwinging.blog.post.entity.Post;
 import com.dwinging.blog.post.entity.PostTag;
 import com.dwinging.blog.post.entity.Tag;
 import com.dwinging.blog.post.repository.Post.MainCategoryRepository;
 import com.dwinging.blog.post.repository.Post.PostRepository;
+import com.dwinging.blog.post.repository.Post.SubCategoryRepository;
 import com.dwinging.blog.post.repository.Post.TagRepository;
+import com.dwinging.blog.user.entity.UserInfo;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,7 +30,8 @@ import lombok.RequiredArgsConstructor;
 public class PostService {
 	
 	private final PostRepository postRepository;
-	private final MainCategoryRepository categoryRepository;
+	private final MainCategoryRepository mainCategoryRepository;
+	private final SubCategoryRepository subCategoryRepository;
 	private final TagRepository tagRepository;
 	
 	/**
@@ -40,17 +44,15 @@ public class PostService {
 	@Transactional
 	public Long createPost(CreateRequestDTO dto) {
 		
-		// 1. 카테고리 검증 및 조회
-		MainCategory category = categoryRepository.findById(dto.getCategoryId())
+		UserInfo user = new UserInfo(); // 임시 유저
+		
+		MainCategory mainCategory = mainCategoryRepository.findById(dto.getMainCategoryId())
 				.orElseThrow(() -> new BusinessException(ErrorCode.CATEGORY_NOT_FOUND));
 		
-		// 2. 게시글 엔티티 생성 및 기본 정보 설정
-		Post post = new Post();
-		post.setTitle(dto.getTitle());
-		post.setContent(dto.getContent());
-		post.setMainCategory(category);
+		SubCategory subCategory = subCategoryRepository.findById(dto.getSubCategoryId()).orElse(null);
 		
-		// 3. 태그 처리: 존재하면 가져오고 없으면 생성하여 중간 테이블(PostTag)로 연결
+		Post post = new Post(dto.getTitle(), dto.getContent(), user, mainCategory, subCategory);
+		
 		if(dto.getTags() != null) {
 			for(String tagName : dto.getTags()) {
 				Tag tag = tagRepository.findByName(tagName)
@@ -61,7 +63,6 @@ public class PostService {
 			}
 		}
 		
-		// 4. 저장 후 생성된 ID 반환
 		return postRepository.save(post).getId();
 	}
 	
@@ -69,24 +70,22 @@ public class PostService {
 	 * 기존 게시글을 수정한다.
 	 * <p>게시글과 카테고리를 조회한 후 필드 값을 변경한다. 
 	 * 태그의 경우 기존 연결을 모두 제거하고 새로운 태그 리스트로 재구성한다.</p>
+	 * @param id 게시글 식별 번호
 	 * @param dto 게시글 수정 요청 데이터
 	 * @return 수정된 게시글의 식별자(ID)
 	 */
-	public Long updatePost(UpdateRequestDTO dto) {
-		// 1. 수정 대상 게시글 조회
+	@Transactional
+	public Long updatePost(Long id, UpdateRequestDTO dto) {
 		Post post = postRepository.findById(dto.getId())
 				.orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
 
-		// 2. 변경할 카테고리 검증
-		MainCategory category = categoryRepository.findById(dto.getCategoryId())
+		MainCategory mainCategory = mainCategoryRepository.findById(dto.getMainCategoryId())
 				.orElseThrow(() -> new BusinessException(ErrorCode.CATEGORY_NOT_FOUND));
-
-		// 3. 데이터 업데이트
-		post.setTitle(dto.getTitle());
-		post.setContent(dto.getContent());
-		post.setMainCategory(category);
-	
-		// 4. 태그 리스트 갱신: 기존 관계 초기화 후 다시 매핑
+		
+		SubCategory subCategory = subCategoryRepository.findById(dto.getSubCategoryId()).orElse(null);
+		
+		post.update(dto.getTitle(), dto.getContent(), mainCategory, subCategory);
+		
 		if(dto.getTags() != null) {
 			post.getPostTags().clear();
 			
@@ -106,9 +105,11 @@ public class PostService {
 	 * 특정 게시글을 삭제한다.
 	 * @param id 삭제할 게시글의 식별자
 	 */
-	public void deletePost(Long id) {
+	@Transactional
+	public Long deletePost(Long id) {
 		Post post = postRepository.findById(id)
 				.orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
 		postRepository.delete(post);
+		return id;
 	}
 }

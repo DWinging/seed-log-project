@@ -20,7 +20,7 @@ import com.dwinging.blog.user.entity.UserInfo;
  */
 @Entity
 @Table(name = "post")
-@Getter @Setter
+@Getter
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class) // 생성/수정 시간 자동 기록을 위한 리스너
 public class Post {
@@ -76,4 +76,20 @@ public class Post {
 	 */
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<PostTag> postTags = new ArrayList<>();
+	
+
+	public Post(String title, String content, UserInfo user, MainCategory mainCategory, SubCategory subCategory) {
+		this.title = title;
+		this.content = content;
+		this.user = user;
+		this.mainCategory = mainCategory;
+		this.subCategory = subCategory;
+	}
+	
+	public void update(String title, String content, MainCategory mainCategory, SubCategory subCategory) {
+		this.title = title;
+		this.content = content;
+		this.mainCategory = mainCategory;
+		this.subCategory = subCategory;
+	}
 }

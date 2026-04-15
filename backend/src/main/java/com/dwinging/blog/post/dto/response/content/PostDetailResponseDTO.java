@@ -26,15 +26,28 @@ public class PostDetailResponseDTO {
     /** 게시글 본문 내용 */
     private String content;
     
-    /** * 소속된 카테고리의 고유 식별자 (ID)
+    /** 게시글 작성자 */
+    private String userId;
+    
+    /** * 소속된 메인 카테고리의 고유 식별자 (ID)
      * 클라이언트가 수정 요청(update) 등을 보낼 때 다시 서버로 전달하기 위해 필요함
      */
-    private Long categoryId;
+    private Long mainCategoryId;
     
-    /** * 소속된 카테고리 이름
-     * 엔티티의 Category 객체 대신 이름(String)만 추출하여 전달함으로써 클라이언트의 편의성 증가
+    /** * 소속된 메인 카테고리 이름
+     * 엔티티의 MainCategory 객체 대신 이름(String)만 추출하여 전달함으로써 클라이언트의 편의성 증가
      */
-    private String categoryName;
+    private String mainCategoryName;
+    
+    /** * 소속된 서브 카테고리의 고유 식별자 (ID)
+     * 클라이언트가 수정 요청(update) 등을 보낼 때 다시 서버로 전달하기 위해 필요함
+     */
+    private Long subCategoryId;
+    
+    /** * 소속된 서브 카테고리 이름
+     * 엔티티의 SubCategory 객체 대신 이름(String)만 추출하여 전달함으로써 클라이언트의 편의성 증가
+     */
+    private String subCategoryName;
     
     /** 게시글에 포함도니 태그 이름 리스트 */
     private List<String> tags;
