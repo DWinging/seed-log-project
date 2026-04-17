@@ -470,3 +470,31 @@ user
     - 해결 : 엔티티 내부에 `update()` 메서드를 구현하여 비즈니스 로직을 중앙화하고, 서비스 계층은 트랜잭션 관리와 엔티티 호출이라는 본연의 역할(흐름 제어)에만 집중하도록 리팩토링.
 
 ---
+
+## 📅 2026-04-17
+
+### 📈 진행 상황
+  - **User 모듈 기본 설계 완료**: UserInfoController 및 관련 DTO(Request/Response) 구성 완료
+  - **사용자 라이프사이클 API 매핑**: 회원가입, 로그인, 로그아웃, 정보 수정, 탈퇴 등 핵심 기능 뼈대 구축
+  - **정보 수정 전략 수립**: Enum(`InfoUpdateType`)을 활용한 유연한 수정 로직 기반 마련
+
+### ✅ 진행 작업 및 학습 내용
+  - **User 컨트롤러 API 설계 (UserInfoController.java)**
+    - `@PostMapping`을 활용한 보안 중심의 로그인(`sign-in`) 및 회원가입(`sign-up`) 인터페이스 구현
+    - RESTful 원칙에 따른 적절한 HTTP 메서드(GET, POST, PUT, DELETE) 및 상태 코드 매핑
+  - **데이터 전송 객체(DTO) 최적화**
+    - **Request DTO**: `SignInDTO`, `SignUpDTO`, `UpdateRequestDTO`로 목적에 맞는 데이터 바인딩 분리
+    - **Response DTO**: `UserInfo`를 통해 민감 정보(비밀번호 등)를 제외한 클라이언트 맞춤형 데이터 반환 구조 확립
+    - **Access Level**: `@NoArgsConstructor(access = AccessLevel.PROTECTED)`를 통해 객체 생성 안정성 확보
+  - **검증(Validation) 전략 수립**
+    - 백엔드: 시스템 보안 및 데이터 무결성 보장을 위한 2차 검증(Bean Validation) 필요성 인지 및 인프라 구축
+
+### 🛠 트러블 슈팅 및 깨달은 점
+  - **Issue : Bean Validation 어노테이션(@NotBlank, @Size 등) 인식 불가**
+    - 원인 : 스프링 부트 2.3 버전 이후 `validation` 모듈이 `spring-boot-starter-web`에서 분리되어 기본 의존성에 포함되지 않음
+    - 해결 : `build.gradle`에 `spring-boot-starter-validation` 의존성을 명시적으로 추가하고 Gradle Refresh를 통해 라이브러리 로드 완료
+  - **Issue : 클라이언트-서버 간 데이터 검증 책임 분리 고민**
+    - 원인 : 프론트엔드에서 체크하는 로직을 서버에서 중복으로 처리하는 것에 대한 의문
+    - 해결 : 프론트엔드 검증은 사용자 경험(UX)을 위함이고, 백엔드 검증은 API 우회 공격 방지 및 데이터 무결성(Security)을 위한 '최종 수비수' 역할임을 이해함. 두 계층의 검증은 상호 보완적 관계임을 확립.
+
+---
