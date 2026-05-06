@@ -3,6 +3,7 @@ package com.dwinging.blog.user.dto.request;
 import com.dwinging.blog.domain.user.entity.InfoUpdateType;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

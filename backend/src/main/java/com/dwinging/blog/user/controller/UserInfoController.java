@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dwinging.blog.user.dto.request.SignInDTO;
 import com.dwinging.blog.user.dto.request.SignUpDTO;
 import com.dwinging.blog.user.dto.request.UpdateRequestDTO;
-import com.dwinging.blog.user.dto.response.UserInfo;
+import com.dwinging.blog.user.dto.response.UserInfoResponse;
 import com.dwinging.blog.user.service.UserInfoService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,7 +29,7 @@ public class UserInfoController {
 	private final UserInfoService userInfoService;
 	
 	@PostMapping("/sign-in")
-	public ResponseEntity<UserInfo> signIn(@RequestBody SignInDTO dto) {
+	public ResponseEntity<UserInfoResponse> signIn(@RequestBody SignInDTO dto) {
 		return ResponseEntity.ok(userInfoService.signIn(dto));
 	}
 	
@@ -45,19 +45,19 @@ public class UserInfoController {
 	}
 	
 	@PostMapping("/signUp")
-	public ResponseEntity<Long> createInfo(@RequestBody SignUpDTO dto) {
+	public ResponseEntity<String> createInfo(@RequestBody SignUpDTO dto) {
 		return ResponseEntity.status(201).body(userInfoService.signUp(dto));
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Long> updateInfo(
-			@PathVariable Long id,
+	public ResponseEntity<String> updateInfo(
+			@PathVariable String id,
 			@RequestBody UpdateRequestDTO dto) {
 		return ResponseEntity.ok(userInfoService.updateInfo(id, dto));
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteInfo(@PathVariable Long id) {
+	public ResponseEntity<Void> deleteInfo(@PathVariable String id) {
 		userInfoService.deleteAccount(id);
 		return ResponseEntity.noContent().build();
 	}

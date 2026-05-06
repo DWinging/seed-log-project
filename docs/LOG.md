@@ -1,5 +1,37 @@
 # 🪵 Seed-Log: Project History & Log
 
+## 📅 2026-04-22 ~ 2026-05-06
+
+### 📈 진행 상황
+  - **User 모듈 Full-Stack 아키텍처 완성**: Controller부터 Repository(DB)까지 이어지는 수직적 데이터 파이프라인(CRUD) 구축 완료
+  - **도메인 중심 설계(DDD) 도입**: 비즈니스 로직을 Entity 내부에 캡슐화하고, 객체 간 연관관계를 활용한 탐색 구조 확립
+  - **데이터베이스 영속성(Persistence) 확보**: JPA Repository를 활용한 실제 DB I/O 검증 및 트랜잭션 관리 기반 마련
+
+### ✅ 진행 작업 및 학습 내용
+  - **Service 계층 고도화 및 데이터베이스 연동**
+    - `UserInfoRepository` 구축 및 `findByUserId` 등 쿼리 메서드(Query Method)를 활용한 식별자 기반 조회 기능 확보
+    - 회원가입(`signUp`), 로그인(`signIn`), 수정(`updateInfo`), 탈퇴(`deleteAccount`) 프로세스의 트랜잭션(`@Transactional`) 범위 설정 및 예외 처리
+    - 방어적 프로그래밍 적용: 프로필 이미지가 없는 유저의 로그인 시 `NullPointerException`이나 불필요한 예외(`orElseThrow`)가 터지지 않도록 Null-Safety 로직 구축
+  - **Entity 설계 최적화 및 객체 그래프 탐색**
+    - 서비스 레이어 의존성 축소: 별도의 `UserImageRepository` 호출 없이, `@OneToOne` 연관관계를 활용해 `user.getUserImage()`로 데이터를 직접 가져오도록 로직 경량화
+    - **Dirty Checking 및 Soft Delete**: 세터(`@Setter`)를 배제하고, `update()` 및 상태값(`status = false`)을 변경하는 `delete()` 메서드를 엔티티 내에 정의하여 데이터 무결성 강화
+  - **인프라 및 컨벤션 2차 통합**
+    - 데이터 유실 방어: 장바구니 등 임시 데이터 처리 시 `request` vs `session`의 Scope 차이를 인지하고, Java 8의 `Map.merge()`를 활용해 세션 기반 병합 로직 교정
+    - 클래스 명확성 확보: `UserInfo` 엔티티와의 명칭 충돌(Import 모호성)을 막기 위해 응답 객체에 Suffix를 붙여 `UserInfoResponse`로 분리 확립
+
+### 🛠 트러블 슈팅 및 깨달은 점
+  - **Issue : Lombok `@Builder` 컴파일 에러 및 기본 생성자 충돌**
+    - 원인 : JPA 엔티티 스펙을 준수하기 위해 `@NoArgsConstructor`를 선언하자, 롬복이 빌더 패턴에 필수적인 '모든 필드를 받는 생성자'를 자동으로 생성하지 않아 빌더의 `build()` 호출이 실패함.
+    - 해결 : 엔티티 클래스 상단에 `@AllArgsConstructor(access = AccessLevel.PRIVATE)`를 명시적으로 추가하여, 외부 노출은 막고 빌더 패턴의 정합성은 확보함.
+  - **Issue : JPA 쿼리 메서드 및 변수명 매핑 오류**
+    - 원인 : DB 친화적인 Snake Case(`user_id`)와 자바 객체의 Camel Case(`userId`)가 혼용되어, 데이터 바인딩 오류 및 JPA 쿼리 자동 생성에 실패함.
+    - 해결 : 프로젝트 전체의 네이밍 컨벤션을 자바 표준인 Camel Case(`userId`)로 통일하여 스프링 프레임워크와의 호환성을 극대화함.
+  - **Issue : 불필요한 Repository 조회로 인한 로직 비효율**
+    - 원인 : 로그인 시 유저 정보와 프로필 이미지를 각각의 Repository에서 두 번 조회하도록 설계함.
+    - 해결 : 엔티티 연관관계 매핑(`@OneToOne`)을 통해 하나의 엔티티에서 그래프를 타고 들어가도록(Graph Traversal) 수정함.
+
+---
+
 ## 📅 2026-04-17
 
 ### 📈 진행 상황

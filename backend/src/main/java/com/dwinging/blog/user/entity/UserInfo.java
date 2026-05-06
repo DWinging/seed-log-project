@@ -1,7 +1,9 @@
 package com.dwinging.blog.user.entity;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -17,13 +19,15 @@ import com.dwinging.blog.post.entity.Post;
 
 @Entity
 @Table(name = "user_info")
-@Getter @Setter
-@NoArgsConstructor
+@Getter
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor
+@Builder
 @EntityListeners(AuditingEntityListener.class)
 public class UserInfo {
 	
 	@Id
-	private String user_id;
+	private String userId;
 	
 	@Column(nullable = false)
 	private String password;
@@ -52,4 +56,13 @@ public class UserInfo {
 	
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private UserImage userImage;
+	
+	public void update(String nickname, String profileImage) {
+		this.nickname = nickname;
+		userImage.setProfileImage(profileImage);
+	}
+	
+	public void delete() {
+		status = false;
+	}
 }

@@ -47,7 +47,7 @@ public class PostSearchService {
 				.mainCategoryId(post.getMainCategory().getId()) 
 			    .mainCategory(post.getMainCategory().getName())
 				.title(post.getTitle())
-				.author(post.getUser().getUser_id())
+				.author(post.getUser().getUserId())
 				.createdAt(post.getCreatedAt())
 				.build());
 	}
