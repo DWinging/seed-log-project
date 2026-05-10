@@ -19,7 +19,7 @@
     - 데이터 유실 방어: 장바구니 등 임시 데이터 처리 시 `request` vs `session`의 Scope 차이를 인지하고, Java 8의 `Map.merge()`를 활용해 세션 기반 병합 로직 교정
     - 클래스 명확성 확보: `UserInfo` 엔티티와의 명칭 충돌(Import 모호성)을 막기 위해 응답 객체에 Suffix를 붙여 `UserInfoResponse`로 분리 확립
 
-### 🛠 트러블 슈팅 및 깨달은 점
+### 🛠 트러블 슈팅
   - **Issue : Lombok `@Builder` 컴파일 에러 및 기본 생성자 충돌**
     - 원인 : JPA 엔티티 스펙을 준수하기 위해 `@NoArgsConstructor`를 선언하자, 롬복이 빌더 패턴에 필수적인 '모든 필드를 받는 생성자'를 자동으로 생성하지 않아 빌더의 `build()` 호출이 실패함.
     - 해결 : 엔티티 클래스 상단에 `@AllArgsConstructor(access = AccessLevel.PRIVATE)`를 명시적으로 추가하여, 외부 노출은 막고 빌더 패턴의 정합성은 확보함.
@@ -50,7 +50,7 @@
   - **검증(Validation) 전략 수립**
     - 백엔드: 시스템 보안 및 데이터 무결성 보장을 위한 2차 검증(Bean Validation) 필요성 인지 및 인프라 구축
 
-### 🛠 트러블 슈팅 및 깨달은 점
+### 🛠 트러블 슈팅
   - **Issue : Bean Validation 어노테이션(@NotBlank, @Size 등) 인식 불가**
     - 원인 : 스프링 부트 2.3 버전 이후 `validation` 모듈이 `spring-boot-starter-web`에서 분리되어 기본 의존성에 포함되지 않음
     - 해결 : `build.gradle`에 `spring-boot-starter-validation` 의존성을 명시적으로 추가하고 Gradle Refresh를 통해 라이브러리 로드 완료
